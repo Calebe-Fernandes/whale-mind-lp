@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[PLACEHOLDER] | Copiloto de estudos by WhaleMind</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        html, body { font-family: 'Inter', sans-serif; overflow-x: hidden; scroll-behavior: smooth; }
+        @media (min-width: 768px) {
+            html, body { height: 100%; min-height: 100vh; display: flex; flex-direction: column; }
+            body.bg-ocean { flex: 1; min-height: 0; }
+            .desktop-viewport { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+            .desktop-viewport main { flex: 1; min-height: 0; }
+            .desktop-viewport .footer-section { flex-shrink: 0; }
+        }
+        .bg-ocean { background: radial-gradient(circle at top, #002845 0%, #001220 100%); position: relative; }
+        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        
+        /* Animação da Baleia Flutuando */
+        .whale-float { animation: float 6s ease-in-out infinite; }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* Animação das Bolhas do Fundo do Mar - mais rápida */
+        .bubble {
+            position: absolute;
+            bottom: -50px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: rise 6s infinite ease-in;
+            z-index: 1;
+            pointer-events: none;
+        }
+        @keyframes rise {
+            0% { transform: translateY(0) scale(1); opacity: 0; }
+            10% { opacity: 0.3; }
+            90% { opacity: 0.3; }
+            100% { transform: translateY(-120vh) scale(1.5); opacity: 0; }
+        }
+
+        /* Lógica do Modal de Termos via CSS */
+        #modal-termos { display: none; }
+        #modal-termos:target { display: flex; }
+
+        /* Animações suaves de entrada para seções */
+        .fade-section {
+            opacity: 0;
+            transform: translateY(16px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .fade-section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* FAQ simples */
+        .faq-item button[aria-expanded="true"] + div {
+            max-height: 200px;
+            opacity: 1;
+        }
+        .faq-answer {
+            max-height: 0;
+            opacity: 0;
+            transition: max-height 0.3s ease, opacity 0.3s ease;
+        }
+    </style>
+</head>
+<body class="bg-ocean text-white min-h-screen">
+
+    <div class="bubble" style="left: 5%; width: 40px; height: 40px; animation-duration: 5s;"></div>
+    <div class="bubble" style="left: 15%; width: 20px; height: 20px; animation-duration: 6.5s; animation-delay: 1s;"></div>
+    <div class="bubble" style="left: 25%; width: 28px; height: 28px; animation-duration: 5.5s; animation-delay: 2.5s;"></div>
+    <div class="bubble" style="left: 45%; width: 55px; height: 55px; animation-duration: 7s; animation-delay: 0.5s;"></div>
+    <div class="bubble" style="left: 55%; width: 12px; height: 12px; animation-duration: 4.5s; animation-delay: 3s;"></div>
+    <div class="bubble" style="left: 70%; width: 35px; height: 35px; animation-duration: 6s; animation-delay: 2s;"></div>
+    <div class="bubble" style="left: 78%; width: 22px; height: 22px; animation-duration: 5.2s; animation-delay: 1.2s;"></div>
+    <div class="bubble" style="left: 85%; width: 15px; height: 15px; animation-duration: 4s; animation-delay: 1.8s;"></div>
+    <div class="bubble" style="left: 92%; width: 32px; height: 32px; animation-duration: 6.2s; animation-delay: 0.8s;"></div>
+    <div class="bubble" style="left: 35%; width: 18px; height: 18px; animation-duration: 5.8s; animation-delay: 2.2s;"></div>
+    <div class="bubble" style="left: 62%; width: 25px; height: 25px; animation-duration: 5.3s; animation-delay: 3.5s;"></div>
+
+    <div class="desktop-viewport flex flex-col flex-1 min-h-0">
+        <nav class="p-6 flex justify-between items-center max-w-6xl mx-auto relative z-10 flex-shrink-0 w-full">
+            <div class="flex items-center space-x-2">
+                <span class="text-3xl">🐋</span>
+                <span class="text-2xl font-extrabold tracking-tighter">Whale<span class="text-cyan-300">Mind</span></span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <span class="hidden md:inline-block text-xs bg-cyan-300/10 text-cyan-200 px-3 py-1 rounded-full border border-cyan-300/30 font-bold uppercase tracking-widest">
+                    Alpha fechada · Vagas limitadas
+                </span>
+            </div>
+        </nav>
+
+        <!-- HERO / WAITLIST -->
+        <main id="waitlist">
+            <div class="main-hero flex flex-col md:flex-row items-center justify-center gap-10 mt-10 px-4 md:px-0">
+
+                <div class="text-center md:text-left fade-section max-w-xl mx-auto md:mx-0">
+                    <p class="inline-flex items-center text-xs font-semibold tracking-[0.2em] uppercase text-cyan-200/80 mb-4 bg-white/5 px-3 py-1 rounded-full border border-white/10">
+                        [PLACEHOLDER] · Copiloto de estudos
+                    </p>
+
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight mb-4 md:mb-5">
+                        Transforme o caos do seu oceano de PDFs em um mar tranquilo de estudos.
+                    </h1>
+
+                    <p class="text-lg md:text-xl text-gray-300 mb-4 md:mb-6 leading-relaxed">
+                        <strong>Pare de se perder em dezenas de arquivos, listas de exercícios e anotações espalhadas.</strong>
+                    </p>
+
+                    <p class="text-base md:text-lg text-gray-300 mb-6 leading-relaxed">
+                        O [PLACEHOLDER] organiza automaticamente seus PDFs, entende o conteúdo da matéria e cria um plano perfeito para você passar na prova.
+                    </p>
+                    
+                    <ul class="space-y-2 md:space-y-3 mb-8 text-gray-300 font-medium text-sm md:text-base max-w-xl mx-auto md:mx-0">
+                        <li class="flex items-start gap-2">
+                            <span class="mt-[2px] text-cyan-300">✔</span>
+                            <span>Planejamento automático com base no <strong>tempo até a prova</strong> e no seu dia a dia.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="mt-[2px] text-cyan-300">✔</span>
+                            <span>Modo <strong>“pergunte ao seu PDF”</strong> para tirar dúvidas direto do material, reduzindo alucinações.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="mt-[2px] text-cyan-300">✔</span>
+                            <span>Feito por universitários, para universitários que vivem na correria de provas e trabalhos.</span>
+                        </li>
+                    </ul>
+    
+                    <p class="text-xs text-gray-400">
+                        Versão <strong>alpha fechada</strong>: estamos abrindo as primeiras vagas para testar o WhaleMind de perto, ouvir feedbacks e ajustar a experiência antes do lançamento público.
+                    </p>
+                </div>
+
+                <div class="relative fade-section w-full md:w-auto mt-6 md:mt-0 md:ml-10 lg:ml-16">
+                    <div class="whale-float absolute -top-20 -right-8 text-8xl opacity-20 hidden md:block">🐋</div>
+                    
+                    <div class="glass p-6 md:p-8 rounded-3xl shadow-2xl relative z-10 w-full max-w-md mx-auto md:mx-0">
+                        <h3 class="text-xl md:text-2xl font-bold mb-2">Entre para a lista de espera da versão alpha 🐋</h3>
+                        <p class="text-gray-400 mb-6 text-sm text-balance font-medium">
+                            Garanta sua vaga para testar o <strong>[PLACEHOLDER]</strong> antes de todo mundo. As vagas são limitadas.
+                        </p>
+                        
+                        <div class="space-y-4">
+                            <a
+                                href="https://docs.google.com/forms/d/SEU_FORM_DO_WHALEMIND_AQUI"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="block w-full text-center bg-cyan-300 hover:bg-cyan-200 text-black font-extrabold py-4 rounded-xl shadow-lg shadow-cyan-300/30 transition-all transform hover:scale-[1.02] active:scale-95"
+                            >
+                                QUERO ENTRAR NA WAITLIST
+                            </a>
+                        </div>
+                        
+                        <p class="text-[10px] text-gray-500 mt-6 leading-tight text-center">
+                            Ao se inscrever, você concorda com nossos <a href="#modal-termos" class="text-cyan-200/80 underline hover:text-cyan-100 font-semibold transition-colors">termos de dados efêmeros</a>.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FOR WHO -->
+            <section id="para-quem" class="max-w-6xl mx-auto px-6 pt-10 md:pt-16 pb-16 md:pb-20 fade-section">
+                <div class="grid md:grid-cols-2 gap-10">
+                    <div>
+                        <h2 class="text-2xl md:text-3xl font-extrabold mb-4">Feito para quem vive de prova em prova.</h2>
+                        <p class="text-sm md:text-base text-gray-300 mb-4 leading-relaxed">
+                            Se a sua vida acadêmica gira em torno de semanas de prova, trabalhos finais e PDFs gigantes, o <strong>[PLACEHOLDER]</strong> foi pensado para você.
+                        </p>
+                        <ul class="space-y-3 text-sm md:text-base text-gray-300">
+                            <li class="flex gap-2">
+                                <span class="mt-[2px] text-cyan-300">•</span>
+                                <span><strong>Engenharias, Exatas e TI</strong>: muitas listas, teorias longas e pouco tempo para revisar tudo.</span>
+                            </li>
+                            <li class="flex gap-2">
+                                <span class="mt-[2px] text-cyan-300">•</span>
+                                <span><strong>Direito, Humanas e Sociais</strong>: artigos, códigos de doutrina em PDFs extensos.</span>
+                            </li>
+                            <li class="flex gap-2">
+                                <span class="mt-[2px] text-cyan-300">•</span>
+                                <span><strong>Saúde e Biológicas</strong>: muita teoria densa e pouco intervalo entre provas e plantões.</span>
+                            </li>
+                        </ul>
+
+                        <p class="mt-5 text-xs text-gray-400">
+                            Nosso time também é universitário. Sabemos como é ter 120 páginas de PDF e 3 dias até a prova — e é exatamente esse cenário que queremos simplificar.
+                        </p>
+                    </div>
+                    <div class="glass rounded-3xl p-6 md:p-8 border border-white/10 max-h-min">
+                        <p class="text-xs font-semibold tracking-[0.2em] uppercase text-cyan-200 mb-3">Este cenário soa familiar?</p>
+                        <h3 class="font-bold text-lg mb-2">“Prova importante em 3 dias, 5 PDFs enormes de conteúdo para revisar.”</h3>
+                        <p class="text-sm text-gray-300 mb-3 leading-relaxed">
+                            Você informa que tem 2h por dia disponível. O [PLACEHOLDER] divide o conteúdo por dificuldade e prioridade, monta um plano de 3 dias focando no que mais tem importância e deixa pronto um chat para tirar dúvidas rápidas sem ter que caçar página por página.
+                        </p>
+                        <p class="text-xs text-gray-400">
+                            Durante a alpha, vamos testar diferentes lógicas de distribuição de conteúdo para encontrar o equilíbrio ideal entre profundidade e tempo disponível.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- HOW IT WORKS -->
+            <section id="como-funciona" class="max-w-6xl mx-auto px-6 pt-10 md:pt-16 pb-16 md:pb-20 fade-section">
+                <div class="md:text-center mb-8 md:mb-12">
+                    <h2 class="text-2xl md:text-3xl font-extrabold mb-3">Como o [PLACEHOLDER] funciona?</h2>
+                    <p class="text-sm md:text-base text-gray-300 max-w-2xl mx-auto">
+                        Em poucos passos, seus PDFs viram um plano de estudos até o dia da prova, com um chat que <strong>realmente conhece o seu material.</strong> 
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-6 md:gap-8">
+                    <div class="glass rounded-2xl p-6 border border-white/10">
+                        <p class="text-xs font-semibold tracking-[0.2em] uppercase text-cyan-200 mb-2">Passo 1</p>
+                        <h3 class="font-bold text-lg mb-2">Envie os PDFs da matéria</h3>
+                        <p class="text-sm text-gray-300 leading-relaxed">
+                            Você escolhe a disciplina (ex.: Cálculo I, Penal, Fisiologia) e sobe os PDFs que realmente caem na prova — slides, listas, capítulos, resumos.
+                        </p>
+                    </div>
+                    <div class="glass rounded-2xl p-6 border border-white/10">
+                        <p class="text-xs font-semibold tracking-[0.2em] uppercase text-cyan-200 mb-2">Passo 2</p>
+                        <h3 class="font-bold text-lg mb-2">Diga quando é a prova e quanto tempo tem</h3>
+                        <p class="text-sm text-gray-300 leading-relaxed">
+                            Informe a data da prova e quanto tempo por dia consegue estudar. O [PLACEHOLDER] distribui o conteúdo em blocos diários realistas.
+                        </p>
+                    </div>
+                    <div class="glass rounded-2xl p-6 border border-white/10">
+                        <p class="text-xs font-semibold tracking-[0.2em] uppercase text-cyan-200 mb-2">Passo 3</p>
+                        <h3 class="font-bold text-lg mb-2">Receba um plano + chat com seus PDFs</h3>
+                        <p class="text-sm text-gray-300 leading-relaxed">
+                            Você vê o cronograma completo até a prova e pode perguntar qualquer coisa no modo <strong>“pergunte ao seu PDF”</strong>, com respostas ancoradas nos arquivos enviados.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FOR WHO -->
+            <section id="para-quem" class="max-w-6xl mx-auto px-6 pt-10 md:pt-16 pb-16 md:pb-20 fade-section">
+                <div class="grid md:grid-cols-2 gap-10 items-center">
+                    <div>
+                        <h2 class="text-2xl md:text-3xl font-extrabold mb-4">Feito para quem vive de prova em prova.</h2>
+                        <p class="text-sm md:text-base text-gray-300 mb-4 leading-relaxed">
+                            Se a sua vida acadêmica gira em torno de semanas de prova, trabalhos finais e PDFs gigantes, o <strong>[PLACEHOLDER]</strong> foi pensado para você.
+                        </p>
+                        <ul class="space-y-3 text-sm md:text-base text-gray-300">
+                            <li class="flex gap-2">
+                                <span class="mt-[2px] text-cyan-300">•</span>
+                                <span><strong>Engenharias, Exatas e TI</strong>: muitas listas, teorias longas e pouco tempo para revisar tudo.</span>
+                            </li>
+                            <li class="flex gap-2">
+                                <span class="mt-[2px] text-cyan-300">•</span>
+                                <span><strong>Direito, Humanas e Sociais</strong>: artigos, códigos de doutrina em PDFs extensos.</span>
+                            </li>
+                            <li class="flex gap-2">
+                                <span class="mt-[2px] text-cyan-300">•</span>
+                                <span><strong>Saúde e Biológicas</strong>: muita teoria densa e pouco intervalo entre provas e plantões.</span>
+                            </li>
+                        </ul>
+
+                        <p class="mt-5 text-xs text-gray-400">
+                            Nosso time também é universitário. Sabemos como é ter 120 páginas de PDF e 3 dias até a prova — e é exatamente esse cenário que queremos simplificar.
+                        </p>
+                    </div>
+                    <div class="glass rounded-3xl p-6 md:p-8 border border-white/10">
+                        <p class="text-xs font-semibold tracking-[0.2em] uppercase text-cyan-200 mb-3">Este cenário soa familiar?</p>
+                        <h3 class="font-bold text-lg mb-2">“Prova importante em 3 dias, 5 PDFs enormes de conteúdo para revisar.”</h3>
+                        <p class="text-sm text-gray-300 mb-3 leading-relaxed">
+                            Você informa que tem 2h por dia disponível. O [PLACEHOLDER] divide o conteúdo por dificuldade e prioridade, monta um plano de 3 dias focando no que mais tem importância e deixa pronto um chat para tirar dúvidas rápidas sem ter que caçar página por página.
+                        </p>
+                        <p class="text-xs text-gray-400">
+                            Durante a alpha, vamos testar diferentes lógicas de distribuição de conteúdo para encontrar o equilíbrio ideal entre profundidade e tempo disponível.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SAFETY / PRIVACY -->
+            <section id="seguranca" class="max-w-6xl mx-auto px-6 pt-10 md:pt-16 pb-16 md:pb-20 fade-section">
+                <div class="md:text-center mb-8 md:mb-10">
+                    <h2 class="text-2xl md:text-3xl font-extrabold mb-3">Seus PDFs não são comida de baleia.</h2>
+                    <p class="text-sm md:text-base text-gray-300 max-w-2xl mx-auto">
+                        A plataforma <strong>[PLACEHOLDER]</strong>, desenvolvida pela WhaleMind, foi pensada para uso pedagógico individual, com foco em <strong>segurança, direitos autorais</strong> e <strong>dados efêmeros</strong>.
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-6 md:gap-8">
+                    <div class="glass rounded-2xl p-6 border border-white/10">
+                        <h3 class="font-bold text-lg mb-2">PDFs apagados em até 48h</h3>
+                        <p class="text-sm text-gray-300 leading-relaxed">
+                            Para este alpha fechado, os documentos originais enviados são <strong>excluídos automaticamente em até 48 horas</strong>, reduzindo a exposição desnecessária de conteúdo.
+                        </p>
+                    </div>
+                    <div class="glass rounded-2xl p-6 border border-white/10">
+                        <h3 class="font-bold text-lg mb-2">Você mantém os direitos</h3>
+                        <p class="text-sm text-gray-300 leading-relaxed">
+                            Respeitamos a Lei 9.610/98: os PDFs continuam sendo propriedade dos seus autores. O [PLACEHOLDER] atua apenas como ferramenta de apoio à leitura e organização.
+                        </p>
+                    </div>
+                    <div class="glass rounded-2xl p-6 border border-white/10">
+                        <h3 class="font-bold text-lg mb-2">IA com responsabilidade</h3>
+                        <p class="text-sm text-gray-300 leading-relaxed">
+                            As respostas são geradas por modelos de IA usando o <strong>conteúdo que você enviou</strong> como contexto. Ainda assim, recomendamos sempre validar com o material original e com o seu professor.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FAQ -->
+            <section id="faq" class="max-w-6xl mx-auto px-6 pt-10 md:pt-16 pb-16 md:pb-20 fade-section">
+                <div class="md:text-center mb-8 md:mb-10">
+                    <h2 class="text-2xl md:text-3xl font-extrabold mb-3">Perguntas frequentes</h2>
+                    <p class="text-sm md:text-base text-gray-300 max-w-2xl mx-auto">
+                        Algumas respostas rápidas sobre a alpha fechada e sobre como o <strong>[PLACEHOLDER]</strong> funciona.
+                    </p>
+                </div>
+
+                <div class="space-y-3 md:space-y-4">
+                    <div class="faq-item glass rounded-2xl border border-white/10 overflow-hidden">
+                        <button class="w-full text-left px-5 py-4 md:px-6 md:py-4 flex justify-between items-center text-sm md:text-base" aria-expanded="false">
+                            <span>O que é a versão alpha e o que eu ganho participando?</span>
+                            <span class="ml-4 text-xs text-gray-300">+</span>
+                        </button>
+                        <div class="faq-answer px-5 pb-4 md:px-6 md:pb-5 text-sm text-gray-300">
+                            Você vai usar uma versão inicial do <strong>[PLACEHOLDER]</strong>, ainda em construção e desenvolvido pela WhaleMind. Isso significa que podem haver bugs ou limitações,
+                            mas em troca você tem acesso antecipado, pode influenciar diretamente os próximos recursos e terá um canal de feedback
+                            muito próximo com o time criador.
+                        </div>
+                    </div>
+
+                    <div class="faq-item glass rounded-2xl border border-white/10 overflow-hidden">
+                        <button class="w-full text-left px-5 py-4 md:px-6 md:py-4 flex justify-between items-center text-sm md:text-base" aria-expanded="false">
+                            <span>Preciso ser de alguma universidade específica para participar?</span>
+                            <span class="ml-4 text-xs text-gray-300">+</span>
+                        </button>
+                        <div class="faq-answer px-5 pb-4 md:px-6 md:pb-5 text-sm text-gray-300">
+                            Não. A princípio, qualquer estudante universitário pode se inscrever na waitlist. Em alguns momentos, podemos priorizar determinadas
+                            instituições ou cursos para rodar testes mais focados, mas isso será comunicado por e-mail.
+                        </div>
+                    </div>
+
+                    <div class="faq-item glass rounded-2xl border border-white/10 overflow-hidden">
+                        <button class="w-full text-left px-5 py-4 md:px-6 md:py-4 flex justify-between items-center text-sm md:text-base" aria-expanded="false">
+                            <span>Quais tipos de arquivo vou poder enviar?</span>
+                            <span class="ml-4 text-xs text-gray-300">+</span>
+                        </button>
+                        <div class="faq-answer px-5 pb-4 md:px-6 md:pb-5 text-sm text-gray-300">
+                            Na alpha, o foco principal do <strong>[PLACEHOLDER]</strong> são <strong>PDFs</strong> (apostilas, slides exportados, artigos, capítulos). Formatos adicionais podem ser testados
+                            mais pra frente, conforme a maturidade da ferramenta.
+                        </div>
+                    </div>
+
+                    <div class="faq-item glass rounded-2xl border border-white/10 overflow-hidden">
+                        <button class="w-full text-left px-5 py-4 md:px-6 md:py-4 flex justify-between items-center text-sm md:text-base" aria-expanded="false">
+                            <span>O acesso será gratuito? Por quanto tempo?</span>
+                            <span class="ml-4 text-xs text-gray-300">+</span>
+                        </button>
+                        <div class="faq-answer px-5 pb-4 md:px-6 md:pb-5 text-sm text-gray-300">
+                            Durante a fase alpha planejamos oferecer acesso sem custo ao <strong>[PLACEHOLDER]</strong> para os participantes selecionados, em troca de feedbacks sinceros
+                            sobre a experiência. Detalhes sobre duração e condições serão enviados por e-mail a cada grupo convidado.
+                        </div>
+                    </div>
+
+                    <div class="faq-item glass rounded-2xl border border-white/10 overflow-hidden">
+                        <button class="w-full text-left px-5 py-4 md:px-6 md:py-4 flex justify-between items-center text-sm md:text-base" aria-expanded="false">
+                            <span>Como vocês lidam com a privacidade e com dados sensíveis dos PDFs?</span>
+                            <span class="ml-4 text-xs text-gray-300">+</span>
+                        </button>
+                        <div class="faq-answer px-5 pb-4 md:px-6 md:pb-5 text-sm text-gray-300">
+                            Os arquivos enviados são usados apenas para gerar o plano de estudos e o modo “pergunte ao seu PDF” dentro do <strong>[PLACEHOLDER]</strong>. Na alpha, os documentos
+                            são excluídos automaticamente em até 48h, e recomendamos que você evite enviar PDFs que contenham dados pessoais sensíveis.
+                            Você pode ler os detalhes completos nos nossos termos.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FOOTER LEGAL -->
+            <section class="footer-section max-w-6xl mx-auto px-6 py-6 md:py-10 border-t border-white/5">
+                <div class="grid md:grid-cols-3 gap-6 md:gap-8 text-xs text-gray-500 leading-relaxed">
+                    <div>
+                        <h4 class="font-bold text-gray-400 mb-2 uppercase">Acessibilidade & Estudo</h4>
+                        <p>A plataforma <strong>[PLACEHOLDER]</strong>, desenvolvida pela WhaleMind, é uma ferramenta independente de auxílio à leitura e produtividade acadêmica. Não possuímos vínculo oficial com a administração de nenhuma universidade. O uso é destinado estritamente para fins pedagógicos individuais.</p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-gray-400 mb-2 uppercase">Privacidade & Direitos</h4>
+                        <p>Respeitamos a Lei 9.610/98. Os documentos processados permanecem sendo propriedade de seus autores. Para garantir a segurança e a conformidade com a LGPD, os arquivos originais são <strong>deletados automaticamente após 48 horas</strong> neste alpha fechado.</p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-gray-400 mb-2 uppercase">Limitação de Responsabilidade</h4>
+                        <p>O usuário declara possuir permissão de acesso aos arquivos enviados. As respostas são geradas via IA e podem conter imprecisões. Sempre valide as informações diretamente na fonte oficial fornecida pelo seu professor ou instituição.</p>
+                    </div>
+                </div>
+                <div class="mt-6 text-center text-[10px] text-gray-600">
+                    &copy; 2026 WhaleMind. Desenvolvido com ❤️ por universitários para universitários.
+                </div>
+            </section>
+           
+
+            <div id="modal-termos" class="fixed inset-0 bg-black/90 backdrop-blur-md hidden items-center justify-center z-[100] p-4">
+                <div class="bg-[#001220] border border-white/20 p-8 rounded-3xl max-w-2xl max-h-[80vh] overflow-y-auto relative shadow-2xl">
+                    <a href="#" class="absolute top-4 right-6 text-gray-500 hover:text-white text-2xl transition-colors">✕</a>
+                    <h2 class="text-2xl font-extrabold mb-6 text-yellow-400 flex items-center gap-2">
+                        <span>🐋</span> Termos WhaleMind
+                    </h2>
+                    <div class="text-sm text-gray-300 space-y-6 leading-relaxed">
+                        <section>
+                            <h4 class="font-bold text-white mb-1 uppercase text-xs tracking-widest">1. Objetivo do Serviço</h4>
+                            <p>O WhaleMind é um assistente de leitura individual. O usuário é responsável por garantir que possui permissão de acesso ao material enviado para processamento.</p>
+                        </section>
+                        <section>
+                            <h4 class="font-bold text-white mb-1 uppercase text-xs tracking-widest">2. Retenção de Dados (7 dias)</h4>
+                            <p>Em conformidade com a LGPD e para proteção de direitos autorais, neste alpha fechado, todos os documentos são <strong>permanentemente excluídos</strong> após 48 horas.</p>
+                        </section>
+                        <section>
+                            <h4 class="font-bold text-white mb-1 uppercase text-xs tracking-widest">3. Isenção de Responsabilidade</h4>
+                            <p>A ferramenta utiliza modelos generativos (Gemini API). O WhaleMind não se responsabiliza por imprecisões técnicas em cálculos ou teorias complexas geradas pela IA.</p>
+                        </section>
+                    </div>
+                    <a href="#" class="block mt-10 bg-white/5 text-center py-4 rounded-xl hover:bg-white/10 transition-all font-bold text-yellow-400 uppercase tracking-widest text-xs">Fechar e Voltar</a>
+                </div>
+            </div>
+
+        </main>
+
+
+
+    <script>
+        // Animações suaves ao rolar (sections com .fade-section)
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            },
+            { threshold: 0.15 }
+        );
+
+        document.querySelectorAll('.fade-section').forEach(section => {
+            observer.observe(section);
+        });
+
+        // FAQ simples (abre/fecha resposta)
+        document.querySelectorAll('.faq-item button').forEach((button) => {
+            button.addEventListener('click', () => {
+                const expanded = button.getAttribute('aria-expanded') === 'true';
+                // fecha outros
+                document.querySelectorAll('.faq-item button').forEach((btn) => {
+                    btn.setAttribute('aria-expanded', 'false');
+                });
+                // toggle atual
+                button.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+            });
+        });
+    </script>
+
+</body>
+</html>
